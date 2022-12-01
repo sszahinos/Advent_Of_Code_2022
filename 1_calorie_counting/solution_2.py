@@ -21,11 +21,25 @@ def analyze_elves(data):
     print("Max calories: {}".format(get_max_cal(elves)))
 
 def get_max_cal(elves):
-    max_cal = 0
+    max_cals = [0, 0, 0]
     for elve_cal in elves:
-        if elve_cal > max_cal:
-            max_cal = elve_cal
-    return max_cal
+        for cal in max_cals:
+            if elve_cal > cal:
+                update_max(elve_cal, max_cals)
+                break
+    total = 0
+    for cal in max_cals:
+        total += cal
+    return total
+
+def update_max(new_cal, cals):
+    for index, cal in enumerate(cals):
+        if new_cal > cal:
+            aux = cal
+            cals[index] = new_cal
+            new_cal = aux
+
+
 
 if __name__ == "__main__":
     main()
