@@ -39,7 +39,5 @@ def update_max(new_cal, cals):
             cals[index] = new_cal
             new_cal = aux
 
-
-
 if __name__ == "__main__":
     main()
