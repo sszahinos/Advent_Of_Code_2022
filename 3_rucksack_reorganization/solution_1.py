@@ -9,11 +9,13 @@ def main():
     data = input_file.readlines()
     print("The sum of the priorities is: {}".format(get_priorities(data)))
 
+
 def get_priorities(rucksacks):
     total_priorities = 0
     for rucksack in rucksacks:
         total_priorities += find_priority(rucksack.strip('\n'))
     return total_priorities
+
 
 def find_priority(rucksack):
     mid = int(len(rucksack) / 2)
@@ -26,6 +28,7 @@ def find_priority(rucksack):
                 return ord(rucksack[i]) - 96
         i += 1
     return -1
+
 
 def find_item(rucksack, wrong_item, mid):
     rucksack_len = int(len(rucksack))
