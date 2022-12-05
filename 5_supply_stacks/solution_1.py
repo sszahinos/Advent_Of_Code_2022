@@ -25,15 +25,19 @@ def get_stacks(data):
         size += 1
     stacks = []
     size -= 1
-    aux = size
+    aux = stacks_num
     while aux >= 0:
         stacks.append([])
         aux -= 1
+    print(len(stacks))
     while size >= 0:
         data_pos = 1
         for stack in range(stacks_num):
+            #print("stack> {}".format(stacks[stack]))
             if (data[size][data_pos] != ' '):
+                #print(size, data_pos)
                 stacks[stack].append(data[size][data_pos])
+
             data_pos += 4
         size -= 1
     return stacks
