@@ -10,6 +10,7 @@ def main():
     stacks = get_stacks(data)
     moves = get_moves(data)
     top_crates = get_top_crates(stacks, moves)
+
     print("Top crates are: ", end='')
     for crate in top_crates:
         print("{}".format(crate), end='')
@@ -19,6 +20,7 @@ def main():
 def get_stacks(data):
     stacks_num = int(len(data[0]) / 4)
     size = 0
+
     for row in data:
         if row[1] == '1':
             break
@@ -56,11 +58,15 @@ def get_moves(data):
 
 def get_top_crates(stacks, moves):
     for move in moves:
-        steps = 0
-        while steps < move[0]:
-            crate = stacks[move[1]].pop(-1)
-            stacks[move[2]].append(crate)
-            steps += 1
+        crates_picked = 0
+        crate_group = []
+        while crates_picked < move[0]:
+            crate_group.append(stacks[move[1]].pop(-1))
+            crates_picked += 1
+        crates_picked = 0
+        while crates_picked < move[0]:
+            stacks[move[2]].append(crate_group.pop(-1))
+            crates_picked += 1
     top_crates = []
     for col in stacks:
         top_crates.append(col.pop())
