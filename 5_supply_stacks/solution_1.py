@@ -26,18 +26,14 @@ def get_stacks(data):
     stacks = []
     size -= 1
     aux = stacks_num
-    while aux >= 0:
+    while aux > 0:
         stacks.append([])
         aux -= 1
-    print(len(stacks))
     while size >= 0:
         data_pos = 1
         for stack in range(stacks_num):
-            #print("stack> {}".format(stacks[stack]))
-            if (data[size][data_pos] != ' '):
-                #print(size, data_pos)
+            if data[size][data_pos] != ' ':
                 stacks[stack].append(data[size][data_pos])
-
             data_pos += 4
         size -= 1
     return stacks
@@ -51,7 +47,8 @@ def get_moves(data):
     count = 0
     while i < len(data):
         moves.append([])
-        moves[count] = [int(data[i][5]), int(data[i][12]) - 1, int(data[i][17]) - 1]
+        aux = data[i].split(sep=' ')
+        moves[count] = [int(aux[1]), int(aux[3]) - 1, int(aux[5]) - 1]
         i += 1
         count += 1
     return moves
