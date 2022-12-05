@@ -8,6 +8,12 @@ def main():
     data = input_file.readlines()
     stacks = get_stacks(data)
     moves = get_moves(data)
+    top_crates = get_top_crates(stacks, moves)
+
+    print("Top crates are: ", end='')
+    for crate in top_crates:
+        print("{}".format(crate), end='')
+    print()
 
 def get_stacks(data):
     stacks_num = int(len(data[0]) / 4)
@@ -41,11 +47,22 @@ def get_moves(data):
     count = 0
     while i < len(data):
         moves.append([])
-        moves[count] = [int(data[i][5]), int(data[i][12]), int(data[i][17])]
+        moves[count] = [int(data[i][5]), int(data[i][12]) - 1, int(data[i][17]) - 1]
         i += 1
         count += 1
-    print(moves)
-        
+    return moves
+
+def get_top_crates(stacks, moves):
+    for move in moves:
+        steps = 0
+        while steps < move[0]:
+            crate = stacks[move[1]].pop(-1)
+            stacks[move[2]].append(crate)
+            steps += 1
+    top_crates = []
+    for col in stacks:
+        top_crates.append(col.pop())
+    return top_crates
 
 if __name__ == "__main__":
     main()
