@@ -1,4 +1,4 @@
-FILE_PATH = "./test.txt"
+FILE_PATH = "./input.txt"
 MAX_SIZE = 100000
 
 
@@ -10,40 +10,35 @@ class File:
     def __str__(self):
         return "{}".format(self.name)
 
-class Folder:
-    files = []
-    folders = []
 
+class Folder:
     def __init__(self, name: str, parent=None):
         self.name = name
         self.parent = parent
+        self.files = []
+        self.folders = []
 
     def __str__(self):
-        # tree = ""
-        # tree += str(self.name) + "\n"
-        # print(self.files)
-        # for file in self.files:
-        #     tree += "-f {}\n".format(file.name)
-        # for folder in self.folders:
-        #     tree += "-d {}\n".format(str(folder))
-        #return tree
         return str(self.name)
 
     def add_file(self, file: File):
         self.files.append(file)
 
     def add_folder(self, folder):
-        self.folders.append(Folder(folder))
+        self.folders.append(folder)
 
     def get_folder(self, name):
         for folder in self.folders:
             if folder.name == name:
                 return folder
+        return None
 
-    def get_file_size(self):
+    def get_size(self):
         max_size = 0
         for file in self.files:
             max_size += file.size
+        for folder in self.folders:
+            max_size += folder.get_size()
         return max_size
 
     def contains_file(self, file_name: str):
@@ -72,15 +67,17 @@ def get_total_size(data):
 
 def execute_cd(command, tree: Folder, current_folder: Folder):
     if command == '..' and current_folder is not None:
+        print("Moving back to ", current_folder.parent.name)
         current_folder = current_folder.parent
-    elif not folder_exists(command, tree):
-        print("Creating new folder: {}".format(command))
+    elif current_folder is None or not current_folder.get_folder(command):
         new_folder = Folder(command)
         if tree is None:
             tree = new_folder
-        else:
+            print("Creating root folder ", command)
+        elif current_folder:
             new_folder.parent = current_folder
-            tree.add_folder(new_folder)
+            print("Creating new folder '{}' inside '{}'".format(new_folder.name, current_folder.name))
+            current_folder.add_folder(new_folder)
         current_folder = new_folder
     else:
         if not current_folder:
@@ -91,27 +88,22 @@ def execute_cd(command, tree: Folder, current_folder: Folder):
 
 def execute_ls(data, index, current_folder: Folder):
     i = 1
-    while data[i + index][0] != '$' and i + index < len(data) - 1:
+    while i + index <= len(data) - 1 and data[i + index][0] != '$':
         line = data[i + index].split(' ')
-        print(line)
         if line[0] != "dir" and not current_folder.contains_file(line[0]):
-            print("Creating new file: {} with size: {}".format(line[1].strip('\n'), line[0]))
+            print("Creating new file '{}' with size {}".format(line[1].strip('\n'), line[0]))
             current_folder.add_file(File(line[1].strip('\n'), int(line[0])))
         i += 1
-    # hace falta devolver o la clase se actualiza?
 
 
 def calc_size(folder: Folder):
-    total_size = 0
-    # print("entra")
-    # for subfolder in folder.folders:
-    #     total_size += calc_size(subfolder)
-    # total_size += folder.get_file_size()
-    return total_size if total_size < MAX_SIZE else 0
-
-
-def folder_exists(name, tree):
-    pass
+    total = 0
+    for subfolder in folder.folders:
+        aux = subfolder.get_size()
+        if aux < MAX_SIZE:
+            total += aux
+        total += calc_size(subfolder)
+    return total
 
 
 if __name__ == "__main__":
