@@ -1,4 +1,4 @@
-FILE_PATH = "./input.txt"
+
 TOTAL_SIZE = 70000000
 FREE_NEEDED = 30000000
 
